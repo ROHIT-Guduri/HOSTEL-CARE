@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hostel Problem Management System</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f3f5fb;
+    color: #243047;
+}
+
+header {
+    background: #4338ca;
+    color: white;
+    padding: 20px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 {
+    font-size: 23px;
+}
+
+header select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    margin-bottom: 8px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.stat-card p {
+    color: #68738a;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    font-size: 28px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000008;
+}
+
+.card h3 {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin: 14px 0 7px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d9deea;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 11px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.primary {
+    background: #4338ca;
+    color: white;
+    width: 100%;
+    margin-top: 18px;
+}
+
+.primary:hover {
+    background: #312eaa;
+}
+
+.complaint {
+    border: 1px solid #e5e8f0;
+    padding: 16px;
+    border-radius: 9px;
+    margin-bottom: 14px;
+}
+
+.complaint h4 {
+    margin-bottom: 8px;
+}
+
+.complaint p {
+    color: #68738a;
+    font-size: 14px;
+    margin: 7px 0;
+    overflow-wrap: anywhere;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.Pending {
+    background: #fff3cd;
+    color: #946200;
+}
+
+.In-Progress {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.Resolved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.admin-controls {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.admin-controls button {
+    background: #4338ca;
+    color: white;
+}
+
+.admin-controls input {
+    margin-top: 5px;
+}
+
+.empty {
+    color: #7b8497;
+    padding: 20px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #7b8497;
+}
+
+@media (max-width: 850px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 18px;
+    }
+
+    header h1 {
+        font-size: 19px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-card h2 {
+        font-size: 23px;
+    }
+
+    .container {
+        padding: 0 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏠 HostelCare</h1>
+
+    <select id="role" onchange="render()">
+        <option value="Student">Student Dashboard</option>
+        <option value="Admin">Warden / Admin Dashboard</option>
+        <option value="Staff">Maintenance Staff Dashboard</option>
+    </select>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <h2 id="welcomeTitle">Student Dashboard</h2>
+        <p>Submit complaints and track your hostel maintenance requests.</p>
+    </section>
+
+    <section class="stats">
+        <div class="stat-card">
+            <p>Total Complaints</p>
+            <h2 id="total">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Pending</p>
+            <h2 id="pending">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>In Progress</p>
+            <h2 id="progress">0</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Resolved</p>
+            <h2 id="resolved">0</h2>
+        </div>
+    </section>
+
+    <section class="content">
+
+        <div class="card" id="formCard">
+            <h3>📝 Submit a Complaint</h3>
+
+            <form id="complaintForm">
+                <label>Student Name</label>
+                <input id="studentName" required placeholder="Enter your name">
+
+                <label>Room Number</label>
+                <input id="room" required placeholder="Example: 205">
+
+                <label>Complaint Category</label>
+                <select id="category" required>
+                    <option value="">Select category</option>
+                    <option>Water Problem</option>
+                    <option>Electrical Problem</option>
+                    <option>Cleanliness</option>
+                    <option>Wi-Fi Problem</option>
+                    <option>Room Maintenance</option>
+                    <option>Other</option>
+                </select>
+
+                <label>Complaint Description</label>
+                <textarea id="description" required
+                    placeholder="Describe your problem..."></textarea>
+
+                <label>Priority</label>
+                <select id="priority">
+                    <option>Normal</option>
+                    <option>Urgent</option>
+                </select>
+
+                <button class="primary" type="submit">
+                    Submit Complaint
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>📋 Complaint Records</h3>
+
+            <input id="search" placeholder="Search complaints..."
+                oninput="render()" style="margin-bottom:18px">
+
+            <div id="complaintList"></div>
+        </div>
+
+    </section>
+</main>
+
+<footer>
+    Hostel Problem Management System | Web Development Mini Project
+</footer>
+
+<script>
+let complaints = JSON.parse(
+    localStorage.getItem("hostelComplaints") || "[]"
+);
+
+function save() {
+    localStorage.setItem(
+        "hostelComplaints",
+        JSON.stringify(complaints)
+    );
+}
+
+document.getElementById("complaintForm")
+.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const complaint = {
+        id: "HC" + Date.now().toString().slice(-6),
+        student: document.getElementById("studentName").value,
+        room: document.getElementById("room").value,
+        category: document.getElementById("category").value,
+        description: document.getElementById("description").value,
+        priority: document.getElementById("priority").value,
+        status: "Pending",
+        staff: "",
+        remarks: "",
+        date: new Date().toLocaleDateString()
+    };
+
+    complaints.unshift(complaint);
+    save();
+
+    alert("Complaint submitted! Reference ID: " + complaint.id);
+
+    this.reset();
+    render();
+});
+
+function updateStatus(id, status) {
+    const item = complaints.find(c => c.id === id);
+    if (item) {
+        item.status = status;
+        save();
+        render();
+    }
+}
+
+function assignStaff(id, value) {
+    const item = complaints.find(c => c.id === id);
+    if (item) {
+        item.staff = value;
+        save();
+    }
+}
+
+function addRemarks(id, value) {
+    const item = complaints.find(c => c.id === id);
+    if (item) {
+        item.remarks = value;
+        save();
+    }
+}
+
+function render() {
+    const role = document.getElementById("role").value;
+    const search = document.getElementById("search").value.toLowerCase();
+
+    document.getElementById("welcomeTitle").textContent =
+        role === "Admin" ? "Warden Dashboard" :
+        role === "Staff" ? "Maintenance Staff Dashboard" :
+        "Student Dashboard";
+
+    document.getElementById("formCard").style.display =
+        role === "Student" ? "block" : "none";
+
+    document.getElementById("total").textContent = complaints.length;
+    document.getElementById("pending").textContent =
+        complaints.filter(c => c.status === "Pending").length;
+    document.getElementById("progress").textContent =
+        complaints.filter(c => c.status === "In Progress").length;
+    document.getElementById("resolved").textContent =
+        complaints.filter(c => c.status === "Resolved").length;
+
+    const list = document.getElementById("complaintList");
+    list.innerHTML = "";
+
+    const filtered = complaints.filter(c =>
+        (role !== "Staff" || c.staff !== "") &&
+        (c.id + c.student + c.room + c.category + c.description)
+            .toLowerCase().includes(search)
+    );
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<p class="empty">No complaints found.</p>';
+        return;
+    }
+
+    filtered.forEach(c => {
+        const item = document.createElement("div");
+        item.className = "complaint";
+
+        item.innerHTML = `
+            <h4>${escapeHTML(c.category)} — ${escapeHTML(c.id)}</h4>
+            <span class="status ${c.status.replace(" ", "-")}">
+                ${escapeHTML(c.status)}
+            </span>
+            <p><b>Student:</b> ${escapeHTML(c.student)}</p>
+            <p><b>Room:</b> ${escapeHTML(c.room)}</p>
+            <p><b>Priority:</b> ${escapeHTML(c.priority)}</p>
+            <p><b>Description:</b> ${escapeHTML(c.description)}</p>
+            <p><b>Date:</b> ${escapeHTML(c.date)}</p>
+            <p><b>Assigned Staff:</b> ${escapeHTML(c.staff || "Not assigned")}</p>
+            <p><b>Remarks:</b> ${escapeHTML(c.remarks || "No remarks")}</p>
+        `;
+
+        if (role === "Admin") {
+            item.innerHTML += `
+                <div class="admin-controls">
+                    <label>Assign Maintenance Staff</label>
+                    <input id="staff-${c.id}" placeholder="Staff name"
+                        value="${escapeHTML(c.staff)}">
+
+                    <button onclick="assignStaff('${c.id}',
+                        document.getElementById('staff-${c.id}').value)">
+                        Assign Staff
+                    </button>
+
+                    <label>Update Complaint Status</label>
+                    <select onchange="updateStatus('${c.id}', this.value)">
+                        <option ${c.status === "Pending" ? "selected" : ""}>Pending</option>
+                        <option ${c.status === "In Progress" ? "selected" : ""}>In Progress</option>
+                        <option ${c.status === "Resolved" ? "selected" : ""}>Resolved</option>
+                    </select>
+                </div>
+            `;
+        }
+
+        if (role === "Staff" && c.staff) {
+            item.innerHTML += `
+                <div class="admin-controls">
+                    <label>Progress / Resolution Remarks</label>
+                    <textarea id="remarks-${c.id}">${escapeHTML(c.remarks)}</textarea>
+                    <button onclick="addRemarks('${c.id}',
+                        document.getElementById('remarks-${c.id}').value)">
+                        Save Remarks
+                    </button>
+
+                    <button onclick="updateStatus('${c.id}', 'In Progress')">
+                        Mark In Progress
+                    </button>
+
+                    <button onclick="updateStatus('${c.id}', 'Resolved')">
+                        Mark Resolved
+                    </button>
+                </div>
+            `;
+        }
+
+        list.appendChild(item);
+    });
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function(char) {
+        return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        }[char];
+    });
+}
+
+
+if (role === "Staff" && c.staff) {
+    item.innerHTML += `
+        <div class="admin-controls">
+            <label>Resolution Remarks</label>
+            <textarea id="remarks-${c.id}"
+                placeholder="Describe how the complaint was resolved..."
+            >${escapeHTML(c.remarks)}</textarea>
+
+            <button onclick="resolveComplaint('${c.id}')">
+                Resolve Complaint
+            </button>
+        </div>
+    `;
+}
+
+render();
+</script>
+
+</body>
+</html>
